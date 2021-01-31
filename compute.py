@@ -3,7 +3,7 @@ import csv
 PATH_DATA="data.csv"
 PATH_THETA="thetas.csv"
 LEARNING_RATE=0.01
-ITERATION=1000
+ITERATION=30000
 PRINTEACH=500
 
 def data_read(pathing):

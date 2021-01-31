@@ -1,28 +1,13 @@
 import csv
 import math
 from predict import theta_read
+from compute import data_read
 from sys import argv
 from os import path
 # math is for math.pow(...,0.5)
 
 PATH_DATA="data.csv"
 PATH_THETA="anova.csv"
-
-def data_read(pathing):
-    try:
-        fd = open(pathing, "r", newline='')
-        reader = csv.reader(fd, delimiter=',')
-        mileage = []
-        price = []
-        next(reader)
-        for row in reader:
-            mileage.append(float(row[0]))
-            price.append(float(row[1]))
-        datapoint = [mileage, price]
-    except Exception as e:
-        print("data_read:", e)
-        return None
-    return datapoint
 
 def calculate_theta(mileage, price):
     if len(mileage) < 3:
