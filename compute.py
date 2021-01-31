@@ -3,7 +3,7 @@ import csv
 PATH_DATA="data.csv"
 PATH_THETA="thetas.csv"
 LEARNING_RATE=0.01
-ITERATION=80000
+ITERATION=1000
 PRINTEACH=500
 
 def data_read(pathing):
@@ -71,6 +71,9 @@ def main():
         print("negative value not supported (illogical in this context)")
         return (-1)
     price = datapoint[1]
+    if len(mileage) != len(price):
+        print("dataset must have the same length")
+        return (-1)
     theta = gradient_descent(mileage, price, maxi, LEARNING_RATE, ITERATION)
     theta[1] = theta[1] / maxi
     theta_create(PATH_THETA, theta, len(datapoint[0]))

@@ -1,4 +1,5 @@
 from os import path
+from sys import argv
 import csv
 
 PATH_THETA = "thetas.csv"
@@ -18,7 +19,7 @@ def theta_read(pathing):
     try:
         fd = open(pathing, "r", newline='')
         reader = csv.reader(fd, delimiter=',')
-        header = next(reader)
+        next(reader)
         theta = [None] * 2
         theta[0] = float(next(reader)[1])
         theta[1] = float(next(reader)[1])
@@ -42,10 +43,15 @@ def main():
     if theta == None:
         return (-1)
     try:
-        mileage = float(input("Enter mileage: "))
+        if (len(argv) > 1):
+            mileage = float(argv[1])
+            print("Mileage is:    " + str(mileage))
+        else:
+            mileage = float(input("Enter mileage: "))
     except Exception as e:
         print("Input error: ", e)
         return (-1)
+    print("Price is:      ", end='')
     print(theta[0] + theta[1] * mileage)
     return (0)
 

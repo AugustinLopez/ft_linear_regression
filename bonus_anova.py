@@ -1,9 +1,12 @@
 import csv
 import math
+from predict import theta_read
+from sys import argv
+from os import path
 # math is for math.pow(...,0.5)
 
 PATH_DATA="data.csv"
-PATH_THETA="thetas_bonus.csv"
+PATH_THETA="anova.csv"
 
 def data_read(pathing):
     try:
@@ -49,12 +52,12 @@ def calculate_theta(mileage, price):
     anova['correlation'] = covariance / (anova['std_x'] * anova['std_y'])
     anova['theta_0'] = theta_0
     anova['theta_1'] = theta_1
-    return (anova)
-
-def calculate_statistic(mileage, price, anova):
     anova['R'] = abs(anova['correlation'])
     anova['R^2'] = math.pow(anova['R'],2.0)
     anova['adjusted R^2'] = 1 - ((1 - anova['R^2'])*(anova['population'] - 1)/(anova['population'] - 2))
+    return (anova)
+
+def calculate_statistic(mileage, price, anova):
     SquaredSumError = 0
     SquaredSumRegr = 0
     for i in range(len(mileage)):
@@ -85,7 +88,23 @@ def data_create(pathing, anova):
         print(anova)
         fd.close()
     except Exception as e:
-        print ("theta_create:", e)
+        print ("data_create:", e)
+        return (-1)
+    return (0)
+
+def data_add(pathing, anova):
+    try:
+        fd = open(pathing, "a")
+        fd.write("theta_0b,"+str(anova['theta_0'])+"\ntheta_1b,"+str(anova['theta_1'])+"\n")
+        fd.write("SEEb,"+str(anova['SEE'])+"\n")
+        fd.write("Fb,"+str(anova['F'])+"\nstd_theta_0b,"+str(anova['std_theta_0'])+"\n")
+        fd.write("std_theta_1b,"+str(anova['std_theta_1'])+"\n")
+        fd.write("t_interceptb,"+str(anova['t_intercept'])+"\nt_slopeb,"+str(anova['t_slope'])+"\n")
+        print("\nAdditional data:")
+        print(anova)
+        fd.close()
+    except Exception as e:
+        print ("data_add:", e)
         return (-1)
     return (0)
 
@@ -101,6 +120,18 @@ def main():
         return (-1)
     calculate_statistic(datapoint[0], datapoint[1], anova)
     data_create(PATH_THETA, anova)
+    if (len(argv) < 2):
+        return (0)
+    if not path.exists(argv[1]):
+        print("Error: path not found")
+        return (-1)
+    theta = theta_read(argv[1])
+    if theta == None:
+        return (-1)
+    anova['theta_0'] = theta[0]
+    anova['theta_1'] = theta[1]
+    calculate_statistic(datapoint[0], datapoint[1], anova)
+    data_add(PATH_THETA, anova)
 
 if __name__ == "__main__":
     main()
