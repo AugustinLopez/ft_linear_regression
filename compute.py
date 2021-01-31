@@ -1,10 +1,9 @@
 import csv
-import math
 
 PATH_DATA="data.csv"
 PATH_THETA="thetas.csv"
 LEARNING_RATE=0.01
-ITERATION=20000
+ITERATION=80000
 PRINTEACH=500
 
 def data_read(pathing):
@@ -45,10 +44,13 @@ def gradient_descent(mileage, price, maxi, learning_rate, iteration):
     print(iteration, " > [", theta[0], theta[1] / maxi, "]")
     return (theta)
 
-def theta_create(pathing, theta):
+def theta_create(pathing, theta, population):
     try:
         fd = open(pathing, "w")
         fd.write("data,value\ntheta_0,"+str(theta[0])+"\ntheta_1,"+str(theta[1])+"\n")
+        fd.write("population,"+str(population)+"\n")
+        fd.write("learning rate,"+str(LEARNING_RATE)+"\n")
+        fd.write("iteration,"+str(ITERATION)+"\n")
         fd.close()
     except Exception as e:
         print ("theta_create:", e)
@@ -66,12 +68,12 @@ def main():
     mini = min(datapoint[0])
     mileage = normalize(maxi, mini, datapoint[0])
     if mileage is None:
-        print("Cannot normalize mileage data: negative value not supported (illogical)")
+        print("negative value not supported (illogical in this context)")
         return (-1)
     price = datapoint[1]
     theta = gradient_descent(mileage, price, maxi, LEARNING_RATE, ITERATION)
     theta[1] = theta[1] / maxi
-    theta_create(PATH_THETA, theta)
+    theta_create(PATH_THETA, theta, len(datapoint[0]))
 
 if __name__ == "__main__":
     main()

@@ -24,7 +24,7 @@ def theta_read(pathing):
         theta[1] = float(next(reader)[1])
     except Exception as e:
         print ("theta_read:", e)
-        print ("Fatal Error: unexpected csv format\n\nExpected:")
+        print ("Error: unexpected csv format\n\nExpected:")
         print (DEFAULT_FORMAT)
         return (None)
     try:
